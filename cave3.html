@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #background-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            border: none;
+            z-index: -1;
+        }
+        .monster-text {
+            position: absolute;
+            top: 20%;
+            right: 35%;
+            width: 780px;
+            text-align: left;
+            font-size: 24px;
+            color: white;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        .timer {
+            position: absolute;
+            top: 30%;
+            left: 84.2%;
+            transform: translateX(-50%);
+            font-size: 70px;
+            color: white;
+            font-weight: bold;
+            display: none;
+        }
+        .user-input-container {
+            position: absolute;
+            bottom: 20px;
+            left: 85%;
+            top: 18%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: white;
+            font-size: 27px;
+            width: 100%;
+            display: none;
+        }
+        .inventorycontainer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 554px;
+            margin-left: 870px;
+        }
+
+        .inventory {
+        position: relative;
+        width: 70px;
+        height: 80px;
+        border: 2px solid white;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        font-size: 18px;
+        cursor:pointer;
+        transition: transform 0.2s, border 0.2s;
+        background-size: cover;
+        background-position: center;
+        padding-bottom: 25px;
+    }
+
+    /* Tooltip Style */
+    .inventory::after {
+        content: attr(data-tooltip); /* Gets text from data-tooltip attribute */
+        position: absolute;
+        bottom: 100%; /* Position above the icon */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.75);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        white-space: nowrap;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    /* Show tooltip on hover */
+    .inventory:hover::after {
+        visibility: visible;
+        opacity: 1;
+    }
+
+        .disabled {
+            border-color: gray;
+            background-color: hsla(0, 0%, 27%, 0.623);
+            cursor: not-allowed;
+        }
+
+        .button {
+            position: fixed;
+            top: 10px;
+            right: 29px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #ecc96e;
+            color: rgb(0, 0, 0);
+            border: 0.1cm solid brown;
+            border-radius: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: rgb(243, 208, 133);
+            padding: 20px;
+            margin: 15% auto;
+            width: 50%;
+            border-radius: 10px;
+            z-index: 10001;
+        }
+
+        .close {
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="background-frame" src="cave3structure.html"></iframe>
+    <div class="monster-text" id="monster-intro">
+        <span id="typed-text"></span>
+    </div>
+    
+    <div class="timer" id="countdown-timer">15</div>
+    <div class="user-input-container" id="user-input-container">
+        <p>Choose an option:</p>
+        <input type="number" id="user-input" min="1" max="4" placeholder="1-4">
+        <button onclick="handleUserInput()">Submit</button>
+        <div id="result-text"></div>
+    </div>
+    <h2 id="inventory-title" style="position: absolute; top: 510px; left: 906px; color: white; font-size: 20px;">Your Inventory</h2>
+
+    <div class="inventorycontainer">
+        <div class="inventory disabled" id="item1" data-tooltip="1.Heal Berry" onclick="disableItem('item1')">
+            <img src="../images/inventory/heal berry.png " alt="heal berry">
+        </div>
+        <div class="inventory disabled" id="item2" data-tooltip="2.Vine Hammer" onclick="disableItem('item2')">
+            <img src="images/aqua-blade.png" alt="vine hammer">
+        </div>
+        <div class="inventory disabled" id="item3" data-tooltip="3.Steelheart Blade" onclick="disableItem('item3')">
+            <img src="images/flaming-sword.png" alt="steelheart blade">
+        </div>
+        <div class="inventory disabled" id="item4" data-tooltip="4.Potion of Blaze" onclick="disableItem('item4')">
+            <img src="../images/inventory/blaze.png" alt="potion of blaze">
+        </div>
+    </div>
+
+    <button class="button" onclick="openModal()">Instructions</button>
+    <div id="instructionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>How to Play</h2>
+            <p>1. Weaknesses and Strengths of the monster will be shown for 15 seconds each level.</p>
+            <p>2. New Inventory each level with items to be used during the fight.</p>
+            <p>3. Make choices based on these to defeat the monster and move on to the next level.</p>
+            <p>4. If you lose the fight you will have to restart the cave.</p>
+        </div>
+    </div>
+    
+<img id="rh" src="../images/monsters/rh.png" alt="ab" style="
+display: none;
+position: absolute;
+top: 64%;
+left: 57%;
+transform: translate(-50%, -50%);
+max-width: 40%;
+height: auto;
+z-index: 500;
+">
+<img id="player-img" src="" alt="Player Character" style="
+display: none;
+position: absolute;
+bottom: 11%;
+left: 1%;
+transform: translate(0, 0);
+max-width: 30%;
+height: auto;
+z-index: 500;
+">
+<audio id="defeatSound">
+    <source src="../sounds/Looser.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="victorySound">
+    <source src="../sounds/youwon.mp3" type="audio/mpeg">
+</audio>
+
+
+    <script>
+        function openModal() {
+            document.getElementById('instructionModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('instructionModal').style.display = 'none';
+        }
+
+        const textToType = "ROTTHORN%nStrengths: Can control nearby plant life, making forests and jungles its domain.%nWeakness: Fire destroys its body and metal weapons can sever its vines permanently.%nAttacks:%n1. Vine Whip:  Rotthorn’s vines strike swiftly, cutting blows that lash into the enemy with precision. %n2. Thorn Barrage: A swift barrage of razor-sharp thorns shoots from the creature’s vines, piercing into the enemy.%n3. Blooming Strike: Rotthorn slams the ground, causing a burst of sharp flowers to erupt, cutting into the enemy with force.";
+
+        let textToTypeArray = textToType.split('%n');
+        let index = 0;
+        let currentText = '';
+        let element = document.getElementById('typed-text');
+
+        function typeText() {
+            function typeCharacter() {
+                if (index < textToTypeArray[0].length) {
+                    currentText += textToTypeArray[0][index];
+                    element.innerHTML = currentText;
+                    index++;
+                    setTimeout(typeCharacter, 20); // milliseconds for the text to type out
+                } else {
+                    if (textToTypeArray.length > 1) {
+                        textToTypeArray.shift();
+                        currentText += '<br>';
+                        index = 0;
+                        setTimeout(typeCharacter, 500);
+                    } else {
+                        // When typing is complete, start the countdown timer
+                        startCountdown();
+                    }
+                }
+            }
+            typeCharacter();
+        }
+
+        function startCountdown() {
+            let timerElement = document.getElementById("countdown-timer");
+            let timeLeft = 3;
+            timerElement.style.display = "block";
+            let countdown = setInterval(() => {
+                timerElement.innerText = timeLeft;
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(countdown);
+                    timerElement.style.display = "none";
+                    document.getElementById("monster-intro").style.display = "none";
+                    document.getElementById("user-input-container").style.display = "block";
+
+                    document.body.insertAdjacentHTML('beforeend', '<div id="player-hp" style="position: absolute; top: 130px; left: 50px; font-size: 24px; color: white;">Player HP: 100</div>');
+                    document.body.insertAdjacentHTML('beforeend', '<div id="monster-hp" style="position: absolute; top: 130px; right: 450px; font-size: 24px; color: white;">Monster HP: 100</div>');
+                    document.getElementById("rh").style.display = "block";
+                    document.getElementById("player-img").style.display = "block"; // ⬅ Add this line!
+
+
+                }
+            }, 1000);
+        }
+
+        let playerHP = 100;
+let monsterHP = 100;
+let round = 1;
+let usedUserOptions = new Set();
+let usedMonsterAttacks = new Set();
+let gameLog = ""; // Stores full game history
+
+const userOptions = {
+    1: { name: "1.Heal berry", damage: 0, heal: 30 },
+    2: { name: "2.Vine Hammer", damage: 0, heal: 0 },
+    3: { name: "3.Steelheart Blade", damage: 60, heal: 0 },
+    4: { name: "4.Potion of Blaze", damage: 42, heal: 0 }
+};
+
+const monsterAttacks = {
+    1: { name: "1.Vine whip", damage: 60 },
+    2: { name: "2.Thorn Barrage", damage: 35 },
+    3: { name: "3.Blooming Strike", damage: 35 }
+};
+
+function updateHP() {
+    document.getElementById("player-hp").innerText = `Player HP: ${playerHP}`;
+    document.getElementById("monster-hp").innerText = `Monster HP: ${monsterHP}`;
+}
+
+function handleUserInput() {
+    const userInput = parseInt(document.getElementById("user-input").value);
+    const resultTextElement = document.getElementById("result-text");
+
+    if (userInput >= 1 && userInput <= 4 && !usedUserOptions.has(userInput)) {
+        // Prevent healing if already at full HP
+        if (userInput === 1 && playerHP === 100) {
+            alert("You already have full HP! Choose another option.");
+            return; // Prevent turn progression
+        }
+
+        usedUserOptions.add(userInput);
+
+        let action = userOptions[userInput];
+        monsterHP -= action.damage;
+        playerHP += action.heal;
+        if (playerHP > 100) playerHP = 100; // Cap HP at 100
+
+        let roundText = `
+            <br><span style="font-size: 15px; text-align: center;">
+            <strong>Round ${round}:</strong><br>
+            <strong>You:</strong> ${action.name} (Damage: -${action.damage}, Heal: +${action.heal})
+            </span>
+        `;
+
+        gameLog += roundText;
+        resultTextElement.innerHTML = gameLog;
+        updateHP();
+        document.getElementById("user-input").value = "";
+
+        if (monsterHP <= 0) {
+            setTimeout(() => endGame("You defeated Rotthorn!"), 1000);
+            return;
+        }
+
+        setTimeout(monsterTurn, 1000);
+    } else {
+        alert("Invalid input! Choose an option between 1 and 4 that you haven't chosen before.");
+    }
+}
+
+function monsterTurn() {
+    let resultTextElement = document.getElementById("result-text");
+
+    let availableMonsterAttacks = Object.keys(monsterAttacks).filter(att => !usedMonsterAttacks.has(parseInt(att)));
+
+    if (availableMonsterAttacks.length === 0) {
+        usedMonsterAttacks.clear();
+        availableMonsterAttacks = Object.keys(monsterAttacks);
+    }
+
+    const monsterChoice = availableMonsterAttacks[Math.floor(Math.random() * availableMonsterAttacks.length)];
+    usedMonsterAttacks.add(parseInt(monsterChoice));
+
+    let attack = monsterAttacks[monsterChoice];
+    playerHP -= attack.damage;
+
+    let roundText = `
+        <br><span style="font-size: 15px; text-align: center;">
+        <strong>Monster:</strong> ${attack.name} (Damage: -${attack.damage})
+        </span>
+    `;
+
+    gameLog += roundText; // Store monster's attack
+    resultTextElement.innerHTML = gameLog; // Display updated game log
+    updateHP();
+
+    if (playerHP <= 0) {
+        setTimeout(() => endGame("You were defeated by the monster!"), 1000);
+        return;
+    }
+
+    round++;
+
+    if (round > 4) {
+        setTimeout(() => endGame("The battle ended after 4 rounds!"), 1000);
+    }
+}
+
+function endGame(message) {
+    let resultTextElement = document.getElementById("result-text");
+
+    resultTextElement.innerHTML = `
+        ${gameLog} 
+        <br><br><span style="font-size: 18px; font-weight: bold; color: red; text-align: center; display: block;">
+        ${message}
+        </span>
+    `;
+
+  // Disable user input and button
+  document.getElementById("user-input").style.display = "none";
+    document.querySelector(".user-input-container button").style.display = "none";
+    document.querySelector(".user-input-container p").style.display = "none";
+    if (message.includes("You were defeated by the monster!")) {
+        document.getElementById("defeatSound").play(); // Player lost - show retry modal
+        showRetryModal();
+    } else  {
+        document.getElementById("victorySound").play();// Player won - redirect after 3 seconds
+        setTimeout(() => {
+            nextLevelModal(); // Change to your next level page
+        }, );
+    }
+}
+
+
+window.onload = function () {
+    typeText(); // Already existing call
+
+    // Load selected character from localStorage
+    const selectedCharacter = localStorage.getItem("selectedCharacter");
+    const playerImg = document.getElementById("player-img");
+
+    if (selectedCharacter === "detective") {
+        playerImg.src = "../images/characters/wizard.png"; // Or use the sticker version if you downloaded it
+    } else if (selectedCharacter === "shadow") {
+        playerImg.src = "../images/characters/warrior.png";
+    }
+
+    // Optional fallback image if nothing selected
+    if (!selectedCharacter) {
+        playerImg.src = "../images/characters/warrior.png";
+    }
+};
+function showRetryModal() {
+    // Create modal HTML
+    let retryModal = document.createElement("div");
+    retryModal.id = "retryModal";
+    retryModal.style.position = "fixed";
+    retryModal.style.top = "50%";
+    retryModal.style.left = "50%";
+    retryModal.style.transform = "translate(-50%, -50%)";
+    retryModal.style.background = "rgba(0, 0, 0, 0.9)";
+    retryModal.style.color = "white";
+    retryModal.style.padding = "20px";
+    retryModal.style.borderRadius = "10px";
+    retryModal.style.textAlign = "center";
+    retryModal.style.zIndex = "1000";
+
+    retryModal.innerHTML = `
+        <h2>You Died</h2>
+        <p>Do you want to retry?</p>
+        <button id="retryButton" style="padding: 10px 20px; font-size: 18px; background-color: #ecc96e; color: black; border: 2px solid brown; border-radius: 5px; cursor: pointer;">Retry</button>
+    `;
+
+    document.body.appendChild(retryModal);
+
+    // Add event listener to retry button
+    document.getElementById("retryButton").onclick = function () {
+        window.location.href = "cave3.html"; // Change to your restart page
+    };
+}
+function nextLevelModal() {
+    // Create modal HTML
+    let nextLevelModal = document.createElement("div");
+    nextLevelModal.id = "nextLevelModal";
+    nextLevelModal.style.position = "fixed";
+    nextLevelModal.style.top = "50%";
+    nextLevelModal.style.left = "50%";
+    nextLevelModal.style.transform = "translate(-50%, -50%)";
+    nextLevelModal.style.background = "rgba(0, 0, 0, 0.9)";
+    nextLevelModal.style.color = "white";
+    nextLevelModal.style.padding = "20px";
+    nextLevelModal.style.borderRadius = "10px";
+    nextLevelModal.style.textAlign = "center";
+    nextLevelModal.style.zIndex = "1000";
+
+    nextLevelModal.innerHTML = `
+        <h2>You WON!</h2>
+        <button id="goButton" style="padding: 10px 20px; font-size: 18px; background-color: #ecc96e; color: black; border: 2px solid brown; border-radius: 5px; cursor: pointer;">CONTINUE</button>
+    `;
+
+    document.body.appendChild(nextLevelModal);
+
+    // Add event listener to "GO" button
+    document.getElementById("goButton").onclick = function () {
+        window.location.href = "../story4.html"; // Change to your next level page
+    };
+}
+
+
+
+
+    </script>
+</body>
+</html>
