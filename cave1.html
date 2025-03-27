@@ -458,6 +458,29 @@ function endGame(message) {
         }, );
     }
 }
+function setMonsterBarColor(caveNumber) {
+    const monsterBar = document.getElementById("monster-health-bar");
+    let gradient = "";
+
+    switch (caveNumber) {
+        case 1:
+            gradient = "linear-gradient(to right, black, red, orange)";
+            break;
+        case 2:
+            gradient = "linear-gradient(to right, blue, white, navy)";
+            break;
+        case 3:
+            gradient = "linear-gradient(to right, brown, orange, yellow)";
+            break;
+        case 4:
+            gradient = "linear-gradient(to right, darkgreen, #b0e0e6, blue)";
+            break;
+        default:
+            gradient = "gray";
+    }
+
+    monsterBar.style.background = gradient;
+}
 
 window.onload = function () {
     typeText(); // Already existing call
