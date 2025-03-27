@@ -167,7 +167,7 @@
 
     <div class="inventorycontainer">
         <div class="inventory disabled" id="item1" data-tooltip="1.Heal Berry" onclick="disableItem('item1')">
-            <img src="../images/inventory/heal berry.png " alt="heal berry">
+            <img src="heal berry.png " alt="heal berry">
         </div>
         <div class="inventory disabled" id="item2" data-tooltip="2.Vine Hammer" onclick="disableItem('item2')">
             <img src="images/aqua-blade.png" alt="vine hammer">
@@ -176,7 +176,7 @@
             <img src="images/flaming-sword.png" alt="steelheart blade">
         </div>
         <div class="inventory disabled" id="item4" data-tooltip="4.Potion of Blaze" onclick="disableItem('item4')">
-            <img src="../images/inventory/blaze.png" alt="potion of blaze">
+            <img src="blaze.png" alt="potion of blaze">
         </div>
     </div>
 
@@ -192,7 +192,7 @@
         </div>
     </div>
     
-<img id="rh" src="../images/monsters/rh.png" alt="ab" style="
+<img id="rh" src="rh.png" alt="ab" style="
 display: none;
 position: absolute;
 top: 64%;
@@ -213,11 +213,11 @@ height: auto;
 z-index: 500;
 ">
 <audio id="defeatSound">
-    <source src="../sounds/Looser.mp3" type="audio/mpeg">
+    <source src="Looser.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="victorySound">
-    <source src="../sounds/youwon.mp3" type="audio/mpeg">
+    <source src="youwon.mp3" type="audio/mpeg">
 </audio>
 
 
@@ -420,14 +420,14 @@ window.onload = function () {
     const playerImg = document.getElementById("player-img");
 
     if (selectedCharacter === "detective") {
-        playerImg.src = "../images/characters/wizard.png"; // Or use the sticker version if you downloaded it
+        playerImg.src = "wizard.png"; // Or use the sticker version if you downloaded it
     } else if (selectedCharacter === "shadow") {
-        playerImg.src = "../images/characters/warrior.png";
+        playerImg.src = "warrior.png";
     }
 
     // Optional fallback image if nothing selected
     if (!selectedCharacter) {
-        playerImg.src = "../images/characters/warrior.png";
+        playerImg.src = "warrior.png";
     }
 };
 function showRetryModal() {
@@ -482,7 +482,7 @@ function nextLevelModal() {
 
     // Add event listener to "GO" button
     document.getElementById("goButton").onclick = function () {
-        window.location.href = "../story4.html"; // Change to your next level page
+        window.location.href = "story4.html"; // Change to your next level page
     };
 }
 
