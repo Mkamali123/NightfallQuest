@@ -1,6 +1,6 @@
 body {
     font-family: UnifrakturMaguntia;
-    background: url('../images/cave bgs/cave1.jpg') no-repeat center center;
+    background: url('cave1.jpg') no-repeat center center;
     background-attachment: fixed; /* Keeps the image static on scroll */
     height: 100vh;
     display: flex;
