@@ -340,9 +340,18 @@ const monsterAttacks = {
     3: { name: "3.Smoldering Swipe", damage: 30 }
 };
 
+const maxPlayerHP = 100;
+const maxMonsterHP = 50;
+
 function updateHP() {
-    document.getElementById("player-health-bar").style.width = `${playerHP}%`;
-    document.getElementById("monster-health-bar").style.width = `${monsterHP}%`;
+    const playerBar = document.getElementById("player-health-bar");
+    const monsterBar = document.getElementById("monster-health-bar");
+
+    const playerPercent = Math.max(0, (playerHP / maxPlayerHP) * 100);
+    const monsterPercent = Math.max(0, (monsterHP / maxMonsterHP) * 100);
+
+    playerBar.style.width = `${playerPercent}%`;
+    monsterBar.style.width = `${monsterPercent}%`;
 }
 
 function handleUserInput() {
