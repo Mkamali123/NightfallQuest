@@ -148,6 +148,49 @@
             font-size: 20px;
             cursor: pointer;
         }
+        .health-bar-container {
+  position: absolute;
+  top: 30px;
+  width: 250px;
+  z-index: 100;
+  text-align: center;
+}
+
+.health-label {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.health-bar-bg {
+  background-color: #333;
+  width: 100%;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.health-bar-fill {
+  height: 100%;
+  width: 100%;
+  transition: width 0.4s ease;
+  border-radius: 10px;
+}
+
+#player-health-bar {
+  background: white;
+}
+
+#monster-health-bar {
+  background: linear-gradient(to right, blue, white, navy);
+}
+
+.health-hp {
+  color: white;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
     </style>
 </head>
 <body>
@@ -191,7 +234,24 @@
             <p>4. If you lose the fight you will have to restart the cave.</p>
         </div>
     </div>
-    
+    <!-- Player Health Bar -->
+<div class="health-bar-container" id="player-bar" style="left: 50px; display: none;">
+  <div class="health-label">Player</div>
+  <div class="health-bar-bg">
+    <div class="health-bar-fill" id="player-health-bar"></div>
+  </div>
+  <div class="health-hp" id="player-hp-text">HP: 100</div>
+</div>
+
+<!-- Monster Health Bar -->
+<div class="health-bar-container" id="monster-bar" style="right: 50px; position: absolute; display: none;">
+  <div class="health-label">Monster</div>
+  <div class="health-bar-bg">
+    <div class="health-bar-fill" id="monster-health-bar"></div>
+  </div>
+  <div class="health-hp" id="monster-hp-text">HP: 70</div>
+</div>
+
 <img id="ab" src="ab.png" alt="ab" style="
 display: none;
 position: absolute;
@@ -272,11 +332,13 @@ z-index: 500;
                     timerElement.style.display = "none";
                     document.getElementById("monster-intro").style.display = "none";
                     document.getElementById("user-input-container").style.display = "block";
-
                     document.body.insertAdjacentHTML('beforeend', '<div id="player-hp" style="position: absolute; top: 130px; left: 50px; font-size: 24px; color: white;">Player HP: 100</div>');
                     document.body.insertAdjacentHTML('beforeend', '<div id="monster-hp" style="position: absolute; top: 130px; right: 450px; font-size: 24px; color: white;">Monster HP: 70</div>');
                     document.getElementById("ab").style.display = "block";
-                    document.getElementById("player-img").style.display = "block"; // ⬅ Add this line!
+                    document.getElementById("player-img").style.display = "block";
+                    document.getElementById("player-bar").style.display = "block";
+                    document.getElementById("monster-bar").style.display = "block";
+                     updateHP(); // initial fill
 
 
                 }
@@ -304,9 +366,16 @@ const monsterAttacks = {
 };
 
 function updateHP() {
-    document.getElementById("player-hp").innerText = `Player HP: ${playerHP}`;
-    document.getElementById("monster-hp").innerText = `Monster HP: ${monsterHP}`;
+  const playerHPPercent = Math.max(0, (playerHP / 100) * 100);
+  const monsterHPPercent = Math.max(0, (monsterHP / 70) * 100);
+
+  document.getElementById("player-health-bar").style.width = `${playerHPPercent}%`;
+  document.getElementById("monster-health-bar").style.width = `${monsterHPPercent}%`;
+
+  document.getElementById("player-hp-text").innerText = `HP: ${Math.max(0, playerHP)}`;
+  document.getElementById("monster-hp-text").innerText = `HP: ${Math.max(0, monsterHP)}`;
 }
+
 
 function handleUserInput() {
     const userInput = parseInt(document.getElementById("user-input").value);
