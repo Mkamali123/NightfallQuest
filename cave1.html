@@ -485,21 +485,24 @@ function setMonsterBarColor(caveNumber) {
 window.onload = function () {
     typeText(); // Already existing call
 
-    // Load selected character from localStorage
     const selectedCharacter = localStorage.getItem("selectedCharacter");
     const playerImg = document.getElementById("player-img");
 
     if (selectedCharacter === "detective") {
-        playerImg.src = "wizard.png"; // Or use the sticker version if you downloaded it
+        playerImg.src = "wizard.png";
     } else if (selectedCharacter === "shadow") {
         playerImg.src = "warrior.png";
     }
 
-    // Optional fallback image if nothing selected
     if (!selectedCharacter) {
         playerImg.src = "../images/characters/warrior.png";
     }
+
+    // NEW
+    setMonsterBarColor(1); // Set monster color for Cave 1
+    document.getElementById("player-health-bar").style.background = "white";
 };
+
 
 function showRetryModal() {
     // Create modal HTML
