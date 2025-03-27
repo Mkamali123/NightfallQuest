@@ -176,6 +176,23 @@
   background: linear-gradient(to right, purple, blue, black);
   border-radius: 10px;
 }
+/* Add this in your <style> section */
+.health-bar-fill.player {
+  background-color: white;
+}
+
+.health-bar-fill.monster.cave1 {
+  background: linear-gradient(to right, black, red, orange);
+}
+.health-bar-fill.monster.cave2 {
+  background: linear-gradient(to right, blue, white, navy);
+}
+.health-bar-fill.monster.cave3 {
+  background: linear-gradient(to right, brown, orange, yellow);
+}
+.health-bar-fill.monster.final {
+  background: linear-gradient(to right, darkgreen, #dff, blue);
+}
 
     </style>
 </head>
@@ -241,18 +258,23 @@ z-index: 500;
     z-index: 500;
 ">
 <!-- Player Health Bar -->
-<div class="health-bar-container" style="left: 50px;">
-  <div class="health-label">Player </div>
+<div class="health-bar-container" style="left: 50px; display: none;" id="player-health-container">
+  <div class="health-label">Player</div>
   <div class="health-bar-bg">
-    <div class="health-bar-fill" id="player-health-bar"></div>
+    <div class="health-bar-fill player" id="player-health-bar"></div>
   </div>
+  <div id="player-hp-text" style="color:white; font-size: 14px; margin-top: 4px;">HP: 100</div>
 </div>
 
 <!-- Monster Health Bar -->
-<div class="health-bar-container" style="right: 50px; position: absolute;">
-  <div class="health-label">Monster </div>
+<div class="health-bar-container" style="right: 50px; position: absolute; display: none;" id="monster-health-container">
+  <div class="health-label">Monster</div>
   <div class="health-bar-bg">
-    <div class="health-bar-fill" id="monster-health-bar"></div>
+    <div class="health-bar-fill monster cave1" id="monster-health-bar"></div>
+  </div>
+  <div id="monster-hp-text" style="color:white; font-size: 14px; margin-top: 4px;">HP: 50</div>
+</div>
+
   </div>
 </div>
 <audio id="defeatSound">
@@ -312,9 +334,11 @@ z-index: 500;
                     clearInterval(countdown);
                     timerElement.style.display = "none";
                     document.getElementById("monster-intro").style.display = "none";
+                    document.getElementById("player-health-container").style.display = "block";
+                    document.getElementById("monster-health-container").style.display = "block";
                     document.getElementById("user-input-container").style.display = "block";
-                     document.getElementById("embermaw").style.display = "block";
-                   document.getElementById("player-img").style.display = "block"; // ⬅ Add this line!
+                    document.getElementById("embermaw").style.display = "block";
+                    document.getElementById("player-img").style.display = "block"; // ⬅ Add this line!
 
                 }
             }, 1000);
@@ -344,14 +368,14 @@ const maxPlayerHP = 100;
 const maxMonsterHP = 50;
 
 function updateHP() {
-    const playerBar = document.getElementById("player-health-bar");
-    const monsterBar = document.getElementById("monster-health-bar");
+    const playerHPPercent = Math.max(0, (playerHP / 100) * 100);
+    const monsterHPPercent = Math.max(0, (monsterHP / 50) * 100);
 
-    const playerPercent = Math.max(0, (playerHP / maxPlayerHP) * 100);
-    const monsterPercent = Math.max(0, (monsterHP / maxMonsterHP) * 100);
+    document.getElementById("player-health-bar").style.width = `${playerHPPercent}%`;
+    document.getElementById("monster-health-bar").style.width = `${monsterHPPercent}%`;
 
-    playerBar.style.width = `${playerPercent}%`;
-    monsterBar.style.width = `${monsterPercent}%`;
+    document.getElementById("player-hp-text").innerText = `HP: ${playerHP}`;
+    document.getElementById("monster-hp-text").innerText = `HP: ${monsterHP}`;
 }
 
 function handleUserInput() {
