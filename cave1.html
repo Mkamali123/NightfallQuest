@@ -194,16 +194,16 @@
     </div>
     <div class="inventorycontainer">
         <div class="inventory disabled" id="item1" data-tooltip="1.Potion of crushing waves" onclick="disableItem('item1')">
-            <img src="../images/inventory/wave.png" alt="Potion of Healing">
+            <img src="wave.png" alt="Potion of Healing">
         </div>
         <div class="inventory disabled" id="item2" data-tooltip="2.Aqua Blade" onclick="disableItem('item2')">
             <img src="images/aqua-blade.png" alt="Aqua Blade">
         </div>
         <div class="inventory disabled" id="item3" data-tooltip="3.Healing herbs" onclick="disableItem('item3')">
-            <img src="../images/inventory/herbs.png" alt="Flaming Sword">
+            <img src="herbs.png" alt="Flaming Sword">
         </div>
         <div class="inventory disabled" id="item4" data-tooltip="4.Potion of Blaze" onclick="disableItem('item4')">
-            <img src="../images/inventory/blaze.png" alt="Shield of Light">
+            <img src="blaze.png" alt="Shield of Light">
         </div>
     </div>
 
@@ -219,7 +219,7 @@
         </div>
     </div>
     
-<img id="embermaw" src="../images/monsters/embermaw d3.png " alt="Embermaw" style="
+<img id="embermaw" src="embermaw d3.png " alt="Embermaw" style="
 display: none;
 position: absolute;
 top: 64%;
@@ -256,11 +256,11 @@ z-index: 500;
   </div>
 </div>
 <audio id="defeatSound">
-    <source src="../sounds/Looser.mp3" type="audio/mpeg">
+    <source src=".Looser.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="victorySound">
-    <source src="../sounds/youwon.mp3" type="audio/mpeg">
+    <source src="youwon.mp3" type="audio/mpeg">
 </audio>
 
     <script>
@@ -458,9 +458,9 @@ window.onload = function () {
     const playerImg = document.getElementById("player-img");
 
     if (selectedCharacter === "detective") {
-        playerImg.src = "../images/characters/wizard.png"; // Or use the sticker version if you downloaded it
+        playerImg.src = "wizard.png"; // Or use the sticker version if you downloaded it
     } else if (selectedCharacter === "shadow") {
-        playerImg.src = "../images/characters/warrior.png";
+        playerImg.src = "warrior.png";
     }
 
     // Optional fallback image if nothing selected
@@ -521,7 +521,7 @@ function nextLevelModal() {
 
     // Add event listener to "GO" button
     document.getElementById("goButton").onclick = function () {
-        window.location.href = "../story2.html"; // Change to your next level page
+        window.location.href = "story2.html"; // Change to your next level page
     };
 }
 
