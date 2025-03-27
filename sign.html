@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styling.css">
+</head>
+<style>
+* {
+    font-family: 'Cormorant Upright';
+}
+
+/* Body Styling */
+body {
+    font-family: 'Cormorant Upright';
+    background: url('nightfall quest.jpg') no-repeat center center/cover;
+    height: 100vh;  /* Full viewport height */
+    display: flex;  /* Centering the content horizontally and vertically */
+    justify-content: center; /* Centers the content horizontally */
+    align-items: center; /* Centers the content vertically */
+    margin: 0;
+    position: relative;
+    flex-direction: column;  /* Stacks content vertically */
+    color: white;
+    text-align: center;  /* Centers text within the content */
+}
+
+/* Wrapper styling for the layout */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Styling for the right column that contains the register form */
+.right-column {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styling for the register container box */
+#registerContainer {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 23px; /* Reduced padding for a smaller container */
+    width: 370px;  /* Smaller width */
+    border-radius: 10px; /* Slightly smaller border radius */
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(29, 24, 31, 0.3);
+    backdrop-filter: blur(3px);
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Heading Styling */
+#registerContainer h1 {
+    color: #c4a5c6;
+    margin-bottom: 15px;  /* Slightly reduced margin */
+    font-size: 30px;  /* Smaller font size */
+    font-weight: 700;
+}
+
+/* Styling for the register description */
+#registerContainer p {
+    color: #8c84b5;
+    margin-bottom: 14px;  /* Slightly reduced margin */
+    font-size: 16px;  /* Smaller font size */
+}
+
+/* Form Input Fields Styling */
+#registerForm label {
+    display: block;
+    margin: 8px 0 3px;  /* Reduced margin for better compactness */
+    color: #c4a5c6;
+    font-size: 17px;  /* Smaller font size */
+}
+
+#registerForm input {
+    width: 80%;
+    padding: 10px;  /* Smaller padding */
+    margin: 5px 0;  /* Reduced margin between fields */
+    border: 2px solid #6a3f67;
+    border-radius: 5px;
+    background: rgba(82, 37, 71, 0.2);
+    color: #c4a5c6;
+    font-size: 14px;  /* Smaller font size */
+    outline: none;
+    text-align: center;
+}
+
+#registerForm input::placeholder {
+    color: #816e8b;
+}
+
+/* Submit Button Styling */
+#registerContainer button {
+    width: 80%;
+    padding: 8px;  /* Smaller padding */
+    background: #32224b;
+    border: none;
+    color: rgb(129, 87, 131);
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;  /* Smaller font size */
+    font-weight: bold;
+    transition: 0.3s;
+    margin: 5px;  /* Reduced margin above the button */
+}
+
+#registerContainer button:hover {
+    background: #3e4449;
+}
+
+/* Styling for Register Error or Success Messages */
+#registerMessage {
+    color: #ff6b6b;
+    font-size: 16px;  /* Smaller font size */
+    margin-top: 10px;  /* Reduced margin */
+}
+
+#registerContainer a {
+    color: #8c84b5;
+    text-decoration: none;
+    margin-top: 8px;  /* Reduced margin */
+}
+
+#registerContainer a:hover {
+    color: #c4a5c6;
+}
+
+/* Animation for form fade-in effect */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style for the left column (optional visual enhancement) */
+.left-column {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-column h2 {
+    color: white;
+    font-size: 4em;  /* Smaller font size */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);  /* Slightly smaller shadow */
+}
+</style>
+
+<body>
+    <div class="settings-icon" onclick="toggleSettings()">⚙️</div>
+    <div class="wrapper">
+        <main>
+            <div id="registerContainer" class="form-container">
+                <h1>Register a New Account</h1>
+                <form id="registerForm">
+                    <label for="username">Username:
+                        <input type="text" id="username" name="username" required>
+                    </label>
+                    <label for="password">Password:
+                        <input type="password" id="password" name="password" required>
+                    </label>
+                    <label for="confirmPassword">Confirm Password:
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    </label>
+                    <button type="submit">Register</button>
+                </form>
+                <p id="registerMessage"></p>
+                <p>Already have an account? <br><a href="login.html">Login here</a></p>
+            </div>
+        </main>
+        <div class="settings-menu" id="settingsMenu">
+            <label for="brightnessControl">Brightness</label>
+            <input type="range" id="brightnessControl" min="0" max="100" value="100" oninput="adjustBrightness()">
+            
+            <label for="volumeControl">Volume</label>
+            <input type="range" id="volumeControl" min="0" max="100" value="50" oninput="adjustVolume()">
+            
+            <button onclick="readPage()">Read Page</button>
+            
+            <!-- Go Back Button -->
+            <button onclick="toggleSettings()">Close</button>
+        </div>
+    
+    <script src="utils.js"></script>
+
+    <script>
+      
+
+      
+            document.getElementById("registerForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+        
+                let username = document.getElementById("username").value;
+                let password = document.getElementById("password").value;
+                let confirmPassword = document.getElementById("confirmPassword").value;
+        
+                // Client-side check to see if the two entered passwords match. 
+                if (password !== confirmPassword) {
+                    document.getElementById("registerMessage").textContent = "Passwords do not match.";
+                    return;
+                }
+        
+                // Validation: Check if password is at least 6 characters long and contains at least one special character
+                let passwordRegex = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+                if (!passwordRegex.test(password)) {
+                    document.getElementById("registerMessage").textContent = "Password must be at least 6 characters long and contain at least one special character.";
+                    return;
+                }
+        
+                // Validation: Check if username is at least 2 characters long
+                if (username.length < 2) {
+                    document.getElementById("registerMessage").textContent = "Username must be at least 2 characters long.";
+                    return;
+                }
+            //This query will check to see if the username already exists in the database.
+            let selectQuery = `SELECT id FROM users WHERE username = '${username}'`;
+            dbConfig.set('query', selectQuery);
+            try {
+                let checkResponse = await fetch(dbConnectorUrl, {
+                    method: "POST",
+                    body: dbConfig
+                });
+                let checkResult = await checkResponse.json();
+        
+                //If the username already exists in the database, an error is displayed. 
+                if (checkResult.success && checkResult.data.length > 0) {
+                    document.getElementById("registerMessage").textContent = "Username already exists.";
+                    return;
+                }
+            } catch (error) {
+                console.error("Error checking for existing accounts:", error);
+            }
+        
+            //This query adds the new user credentials to the database. 
+            let insertQuery = `INSERT INTO users (username, password) VALUES ('${username}', '${password}')`;
+            dbConfig.set('query', insertQuery);
+        
+            try {
+                let insertResponse = await fetch(dbConnectorUrl, {
+                    method: "POST",
+                    body: dbConfig
+                });
+                let insertResult = await insertResponse.json();
+        
+                if (insertResult.success) {
+                    document.getElementById("registerMessage").textContent = "Registration successful!";
+                    document.getElementById("registerForm").reset();
+                    setTimeout(function() {
+                        window.location.href = "login.html"; // Redirect to your start page or any other
+                    }, 1000);
+                } else {
+                    document.getElementById("registerMessage").textContent = "Error registering user.";
+                }
+            } catch (error) {
+                console.error("Error registering user:", error);
+            }
+        });
+        
+            // Toggle settings menu visibility
+            function toggleSettings() {
+                let menu = document.getElementById("settingsMenu");
+                menu.style.display = (menu.style.display === "block") ? "none" : "block";
+            }
+    
+            // Adjust page brightness
+            function adjustBrightness() {
+                let brightness = document.getElementById("brightnessControl").value / 100;
+                document.body.style.filter = `brightness(${brightness})`;
+            }
+    
+            // Adjust volume
+            function adjustVolume() {
+                let volume = document.getElementById("volumeControl").value / 100;
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                    readPage();
+                }
+            }
+    
+            // Read the page content aloud
+            function readPage() {
+                let text = document.body.innerText;
+                let speech = new SpeechSynthesisUtterance(text);
+                speech.rate = 1;
+                speech.volume = document.getElementById("volumeControl").value / 100;
+                speechSynthesis.speak(speech);
+            }
+        
+    
+    </script>
+</body>

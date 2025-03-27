@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        input {
+            width: 80%;
+            padding: 10px;
+            background-color: #dcdcdc;
+            color: #6c4283;
+            margin-bottom: 20px;
+            border: 1px solid #55465d;
+            border-radius: 5px;
+        }
+        
+      
+        
+    body {
+        font-family: 'Cormorant Upright';
+        text-align: center;
+        margin: 20px;
+        background-image: url('nightfall quest.jpg');
+        background-size: cover;  /* Ensures the background covers the entire screen */
+        background-position: center;  /* Centers the background image */
+        background-repeat: repeat;  /* Prevents the image from repeating */
+    }
+    th::after {
+        content: " 🔽"; /* Default downward arrow */
+        color: purple;  /* Purple arrow */
+    }
+    
+    th.sorted-asc::after {
+        content: " 🔼"; /* Upward arrow for ascending order */
+        color: purple;  /* Purple arrow */
+    }
+    
+    th.sorted-desc::after {
+        content: " 🔽"; /* Downward arrow for descending order */
+        color: purple;  /* Purple arrow */
+    }
+    
+
+    .container {
+        width: 90%;
+        max-width: 800px;
+        margin: auto;
+        background: rgba(36, 37, 37, 0.7); /* Transparent background with some color */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #18024a; /* Darker color for the text */
+        text-shadow: 4px 4px 10px white; /* Increased shadow size and blur */
+        font-size: 3rem; /* Increase font size */
+    }
+
+    input {
+        width: 80%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #55465d;
+        border-radius: 5px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background-color: #453160;  /* Dark blue background */
+        border: 2px solid rgb(49, 46, 46);    /* White outer border */
+        max-width: 100%;
+    }
+
+    th, td {
+        padding: 12px;
+        border: 1px solid #978ab0;
+        text-align: center;
+        color: rgb(250, 249, 251); /* White text color */
+    }
+
+    th {
+        background-color: #2b0838;  /* Slightly darker blue for the header */
+        color: #ffffff;  /* Ensures the header text is white */
+        cursor: pointer;
+    }
+
+    th::after {
+        content: " 🔽"; /* Default downward arrow */
+    }
+
+    th.sorted-asc::after {
+        content: " 🔼"; /* Upward arrow for ascending order */
+    }
+
+    th.sorted-desc::after {
+        content: " 🔽"; /* Downward arrow for descending order */
+    }
+
+    tr:hover {
+        background-color: #555555;  /* Dark gray when hovered over */
+    }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🏆 Game Leaderboard 🏆</h1>
+
+        <input type="text" id="searchPlayer" placeholder="Search player..." onkeyup="searchPlayer()">
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Rank</th>
+                        <th onclick="sortTable(1)">Player</th>
+                        <th onclick="sortTable(2)">Avg Time (mins)</th>
+                        <th onclick="sortTable(3)">Deaths</th>
+                        <th onclick="sortTable(4)">Damage Dealt</th>
+                        <th onclick="sortTable(5)">Damage Taken</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard">
+                    <tr>
+                        <td>1</td>
+                        <td>Alice</td>
+                        <td>5.3</td>
+                        <td>2</td>
+                        <td>1200</td>
+                        <td>800</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Bob</td>
+                        <td>6.8</td>
+                        <td>5</td>
+                        <td>900</td>
+                        <td>1100</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Charlie</td>
+                        <td>4.2</td>
+                        <td>1</td>
+                        <td>1400</td>
+                        <td>600</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>David</td>
+                        <td>7.1</td>
+                        <td>3</td>
+                        <td>1100</td>
+                        <td>900</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Eve</td>
+                        <td>6.0</td>
+                        <td>4</td>
+                        <td>1000</td>
+                        <td>950</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function searchPlayer() {
+            let input = document.getElementById("searchPlayer").value.toLowerCase();
+            let tableRows = document.querySelectorAll("#leaderboard tr");
+
+            tableRows.forEach(row => {
+                let playerNameCell = row.getElementsByTagName("td")[1];
+                if (playerNameCell) {
+                    let playerName = playerNameCell.textContent.toLowerCase();
+                    row.style.display = playerName.includes(input) ? "" : "none";
+                }
+            });
+        }
+
+        function sortTable(columnIndex) {
+            let table = document.querySelector("table tbody");
+            let rows = Array.from(table.rows);
+
+            let isAscending = table.getAttribute("data-sort-dir") !== "asc";
+            table.setAttribute("data-sort-dir", isAscending ? "asc" : "desc");
+
+            rows.sort((rowA, rowB) => {
+                let cellA = rowA.cells[columnIndex].textContent.trim();
+                let cellB = rowB.cells[columnIndex].textContent.trim();
+
+                let valueA = isNaN(cellA) ? cellA.toLowerCase() : parseFloat(cellA);
+                let valueB = isNaN(cellB) ? cellB.toLowerCase() : parseFloat(cellB);
+
+                return isAscending ? (valueA > valueB ? 1 : -1) : (valueA < valueB ? 1 : -1);
+            });
+
+            table.append(...rows);
+
+            // Toggle sort arrows in the header
+            let headers = document.querySelectorAll("th");
+            headers.forEach(header => header.classList.remove("sorted-asc", "sorted-desc"));
+
+            let sortedHeader = headers[columnIndex];
+            sortedHeader.classList.add(isAscending ? "sorted-asc" : "sorted-desc");
+        }
+    </script>
+
+</body>
+</html>
+

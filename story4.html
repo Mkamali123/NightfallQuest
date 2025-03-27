@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: left;
+        }
+
+        .text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: left;
+            font-size: 40px;
+            white-space: pre-line;
+            word-wrap: break-word;
+            margin-bottom: 50px;
+        }
+
+        .note {
+            font-size: 17px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(243, 245, 248, 0.167);
+            border: none;
+            color: rgba(255, 255, 255, 0.61);
+            padding: 10px 20px;
+        }
+
+        .red-text {
+            color: red;
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-weight: bold;
+            font-size: 70px;
+            display: block;
+        }
+    </style>
+</head>
+<body>    
+
+    <div class="note">"Press Enter to continue"</div>
+    <div class="text">
+        <span id="typed-text"></span>
+        <span id="final-text" class="red-text"></span>
+    </div>
+    <audio id="typeSound" src="sounds/type.mp3"></audio>
+
+<script>
+    const typeSound = document.getElementById("typeSound");
+
+    function playTypingSound() {
+        typeSound.currentTime = 0;  // Reset sound to start
+        typeSound.play();
+    }
+
+    function typeText(line, targetElement, typingSpeed, callback) {
+        isTyping = true;
+        charIndex = 0;
+        targetElement.innerHTML = "";
+
+        typeSound.play(); // Start playing typing sound
+
+        let interval = setInterval(() => {
+            if (charIndex < line.length) {
+                targetElement.innerHTML += line[charIndex];
+                playTypingSound(); // Play sound effect for each character
+                charIndex++;
+            } else {
+                clearInterval(interval);
+                isTyping = false;
+                typeSound.pause(); // Stop sound when typing is done
+                typeSound.currentTime = 0; // Reset sound position
+
+                if (callback) callback();
+            }
+        }, typingSpeed);
+    }
+</script>
+
+
+    <script>
+        const textLines = [
+            "???: Impressive... you’ve actually defeated him?",
+            "???: You’ve done what no one has dared...",
+            "???: But now, the real nightmare begins.",
+            "???: I am the one you’ve been running from.",
+            "???: Your worst fear, your final test.",
+            "???: I am "
+        ];
+
+        const finalLines = [
+            "VENOMCLAW"
+        ];
+
+        const finalDoom = [
+            "PREPARE FOR YOUR DOOM"
+        ];
+
+        let lineIndex = 0;
+        let finalLineIndex = 0;
+        let finalDoomIndex = 0;
+        let charIndex = 0;
+        let isTyping = false;
+        let finalLinesTyped = false;
+        let doomTyped = false;
+        const speed = 50; 
+        const slowSpeed = 160;
+        const element = document.getElementById('typed-text');
+        const finalElement = document.getElementById('final-text');
+
+        function typeText(line, targetElement, typingSpeed, callback) {
+            isTyping = true;
+            charIndex = 0;
+            targetElement.innerHTML = "";
+
+            let interval = setInterval(() => {
+                if (charIndex < line.length) {
+                    targetElement.innerHTML += line[charIndex];
+                    charIndex++;
+                } else {
+                    clearInterval(interval);
+                    isTyping = false;
+                    if (callback) callback();
+                }
+            }, typingSpeed);
+        }
+
+        function typeFinalLines() {
+            if (finalLineIndex < finalLines.length) {
+                let typingSpeed = slowSpeed;
+
+                element.innerHTML = ""; // Clear previous text
+
+                typeText(finalLines[finalLineIndex], finalElement, typingSpeed, () => {
+                    finalLineIndex++;
+                    
+                    if (finalLineIndex === finalLines.length) {
+                        document.addEventListener("keydown", waitForDoomLine);
+                    }
+                });
+            }
+        }
+
+        function typeDoomLine() {
+            if (finalDoomIndex < finalDoom.length) {
+                let typingSpeed = slowSpeed;
+
+                typeText(finalDoom[finalDoomIndex], finalElement, typingSpeed, () => {
+                    finalDoomIndex++;
+                    
+                    if (finalDoomIndex === finalDoom.length) {
+                        doomTyped = true;
+                        document.addEventListener("keydown", proceedToNextPage);
+                    }
+                });
+            }
+        }
+
+        function waitForDoomLine(event) {
+            if (event.key === "Enter") {
+                document.removeEventListener("keydown", waitForDoomLine);
+                typeDoomLine();
+            }
+        }
+
+        function proceedToNextPage(event) {
+            if (event.key === "Enter") {
+                window.location.href = "cave4/cave4.html";
+            }
+        }
+
+        function nextLine() {
+            if (isTyping) return;
+
+            if (lineIndex < textLines.length) {
+                typeText(textLines[lineIndex], element, speed, () => {
+                    lineIndex++;
+                    if (lineIndex === textLines.length) {
+                        document.addEventListener("keydown", waitForFinalLine);
+                    }
+                });
+            } else if (!finalLinesTyped) {
+                typeFinalLines();
+            }
+        }
+
+        function waitForFinalLine(event) {
+            if (event.key === "Enter") {
+                document.removeEventListener("keydown", waitForFinalLine);
+                typeFinalLines();
+            }
+        }
+
+        nextLine();
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                nextLine();
+            }
+        });
+    </script>
+</body>
+</html>

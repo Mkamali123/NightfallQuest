@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Fate</title>
+    <link href="styling.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Cormorant Upright', serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(17, 6, 44);
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Cormorant Upright';
+            font-size: 70px;
+            color: rgb(14, 11, 70);
+            text-align: center;
+            margin-top: 20px;
+            text-shadow: 3px 3px 5px rgb(183, 179, 222); /* White shadow effect */
+        }
+
+        /* Container for the characters */
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 45px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        /* Character card styles */
+        .character {
+            width: 350px;
+            height: 300px;
+            border: 2px solid white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s, border 0.2s;
+            background-size: cover;
+            background-position: center;
+            padding-bottom: 25px;
+            position: relative;
+            
+        }
+
+        /* Character background images */
+        #char1 {
+            background-image: url('images/characters/wizard.png');
+        }
+
+        #char2 {
+            background-image: url('images/characters/warrior.png');
+        }
+
+        /* Character info */
+        .character-info {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Hover effect */
+        .character:hover {
+            transform: scale(1.1);
+            border-color: rgb(40, 40, 38);
+        }
+
+        .selected {
+            border-color: green;
+            background-color: #33333352;
+        }
+
+        .character:focus {
+            outline: 3px solid rgb(4, 12, 55);
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            /* Adjust logo size and font size for smaller screens */
+            h1 {
+                font-size: 50px;
+            }
+
+            .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .character {
+                width: 90%;
+                max-width: 350px;
+                height: 250px;
+                margin: 10px 0;
+            }
+
+            .settings-menu {
+                width: 80%;
+                top: 80px;
+                left: 10px;
+            }
+
+            .settings-menu label,
+            .settings-menu button {
+                font-size: 14px;
+            }
+
+            .settings-icon {
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Settings icon -->
+    <div class="settings-icon" onclick="toggleSettings()">⚙️</div>
+    
+    <!-- Main title -->
+    <h1>Choose Your Fate</h1>
+
+    <!-- Container for character cards -->
+    <div class="container">
+       <div class="character" onclick="selectCharacter('detective')" id="char1">
+ <div class="character-info">
+                <strong>The Wizard</strong><br>
+                <!-- Additional description can go here -->
+            </div>
+        </div>
+       <div class="character" onclick="selectCharacter('shadow')" id="char2">
+  <div class="character-info">
+                <strong>The Warrior</strong><br>
+                <!-- Additional description can go here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings menu -->
+    <div class="settings-menu" id="settingsMenu">
+        <label>Brightness: <input type="range" min="50" max="100" id="brightnessControl" oninput="adjustBrightness()"></label>
+        <label>Volume: <input type="range" min="0" max="100" id="volumeControl" oninput="adjustVolume()"></label>
+        <button onclick="readPage()">🔊 Read Page</button>
+        <button onclick="toggleSettings()">Close</button>
+    </div>
+    <img id="player-img" src="" alt="Player Character" style="
+    display: none;
+    position: absolute;
+    bottom: 5%;
+    left: 8%;
+    transform: translate(0, 0);
+    max-width: 30%;
+    height: auto;
+    z-index: 500;
+">
+
+    <!-- JavaScript functions -->
+    <script>
+        function toggleSettings() {
+            let menu = document.getElementById("settingsMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        function adjustBrightness() {
+            let brightness = document.getElementById("brightnessControl").value / 100;
+            document.body.style.filter = `brightness(${brightness})`;
+        }
+
+        function adjustVolume() {
+            let volume = document.getElementById("volumeControl").value / 100;
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                readPage();
+            }
+        }
+
+        function readPage() {
+            let text = document.body.innerText;
+            let speech = new SpeechSynthesisUtterance(text);
+            speech.rate = 1;
+            speech.volume = document.getElementById("volumeControl").value / 100;
+            speechSynthesis.speak(speech);
+        }
+
+function selectCharacter(character) {
+    localStorage.setItem("selectedCharacter", character);
+    window.location.href = "story1.html"; // ✅ First step in the story
+
+}
+
+
+    </script>
+
+</body>
+</html>

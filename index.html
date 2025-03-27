@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nightfall Quest</title>
+    
+    <style>
+        /* General CSS for basic styling */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: rgb(26, 11, 28);
+            transition: background-color 0.65s ease-in-out;
+            overflow:hidden;
+        }
+
+        /* Full-screen background */
+        .background {
+            background: url('nightfall quest.jpg') no-repeat center center fixed;
+            background-size: cover;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            position: relative;
+            transition: filter 0.2s ease-in-out;
+            filter: brightness(1);
+        }
+
+        /* Logo animation - Starts small and expands */
+        .logo {
+            max-width: 450px;
+            height: auto;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: growIn 2s ease-in-out forwards;
+        }
+
+        @keyframes growIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Right corner buttons */
+        .top-right-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Button style */
+        .top-right-box {
+            padding: 10px 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .top-right-box:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        /* Left corner settings */
+        .top-left-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        /* Settings menu */
+        .settings-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .settings-menu label {
+            display: block;
+            margin: 10px 0;
+        }
+
+        .settings-menu button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .settings-menu button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .settings-icon.active {
+            transform: rotate(90deg);
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="background" id="background">
+        <div class="content">
+            <img src="logoo.png" alt="Logo" class="logo">
+        </div>
+    </div>
+
+    <div class="top-right-container">
+        <div class="top-right-box" onclick="window.location.href='login.html';">
+            Log in
+        </div>
+        <div class="top-right-box" onclick="window.location.href='sign.html';">
+            Create an Account
+        </div>
+    </div>
+
+    <div class="top-left-container">
+        <div class="top-right-box" onclick="toggleSettings()">
+            ⚙️
+        </div>
+    </div>
+
+    <div class="settings-menu" id="settingsMenu">
+        <label>Volume: <input type="range" min="0" max="100" id="volumeControl" oninput="adjustVolume()"></label>
+        <label>Brightness: <input type="range" min="50" max="100" id="brightnessControl" oninput="adjustBrightness()"></label>
+        <button onclick="readPage()">🔊 Read Page</button>
+        <button onclick="toggleSettings()">⬅️ Go Back</button>
+    </div>
+    <audio id="bgMusic" autoplay>
+        <source src="sounds/mystic-forest.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            let audio = document.getElementById("bgMusic");
+    
+            // Try to play the audio when the page loads
+            let playPromise = audio.play();
+    
+            // If autoplay is blocked, show a message or enable manual play
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    console.log("Autoplay blocked. User interaction required.");
+                    let enableSoundButton = document.createElement("button");
+                    enableSoundButton.textContent = "🔊 Enable Sound";
+                    enableSoundButton.style.position = "absolute";
+                    enableSoundButton.style.top = "20px";
+                    enableSoundButton.style.left = "50%";
+                    enableSoundButton.style.transform = "translateX(-50%)";
+                    enableSoundButton.style.padding = "10px 15px";
+                    enableSoundButton.style.background = "rgba(0, 0, 0, 0.7)";
+                    enableSoundButton.style.color = "white";
+                    enableSoundButton.style.borderRadius = "5px";
+                    enableSoundButton.style.cursor = "pointer";
+                    document.body.appendChild(enableSoundButton);
+    
+                    enableSoundButton.addEventListener("click", () => {
+                        audio.play();
+                        enableSoundButton.remove();
+                    });
+                });
+            }
+        });
+   
+        let speech = null;
+
+        function toggleSettings() {
+            let menu = document.getElementById("settingsMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        function adjustBrightness() {
+            let brightness = document.getElementById("brightnessControl").value;
+            let bg = document.getElementById("background");
+            let brightnessFactor = brightness / 100;
+            bg.style.filter = `brightness(${brightnessFactor})`;
+        }
+
+        function adjustVolume() {
+            let volume = document.getElementById("volumeControl").value;
+            if (speech) {
+                speech.volume = volume / 100;
+            }
+        }
+
+        function readPage() {
+            let text = document.body.innerText;
+            if (speech) {
+                speechSynthesis.cancel();
+            }
+            speech = new SpeechSynthesisUtterance(text);
+            speech.rate = 1;
+            speech.volume = document.getElementById("volumeControl").value / 100;
+            speechSynthesis.speak(speech);
+        }
+    </script>
+
+</body>
+</html>

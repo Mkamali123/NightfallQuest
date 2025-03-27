@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: left;
+        }
+
+        .text {
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: left;
+            font-size: 40px;
+            white-space: pre-line;
+            word-wrap: break-word;
+            margin-bottom: 50px;
+        }
+        .note {
+            font-size: 10px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(243, 245, 248, 0.167);
+            border: none;
+            color: rgba(255, 255, 255, 0.61);
+            font-size: 17px;
+            padding: 10px 20px;
+        }
+        .choices {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .choice {
+            background: rgb(41, 54, 82);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-radius: 12px;
+        }
+        .choice:hover {
+            background: rgb(84, 109, 165);
+        }
+       
+    </style>
+</head>
+<body>    
+
+    <div class="note">"Press Enter to continue"</div>
+    <div class="text">
+        <span id="typed-text"></span>
+    </div>
+
+    <script>
+       const textLines = [
+       "???: Hmm, I underestimated your strength",
+       "???: The next one is the strongest among my army" ,
+       "???: Remember, don't judge a book by it's cover...MUAHAHAHHA",
+       "GOOD LUCK HUMAN!"
+   
+];
+
+
+        let lineIndex = 0;
+        let charIndex = 0;
+        let isTyping = false;
+        let finishedIntro = false;
+        const speed = 50; // Typing speed in milliseconds
+        const element = document.getElementById('typed-text');
+        const choicesDiv = document.getElementById('choices');
+
+        function typeText(line, callback) {
+            isTyping = true;
+            element.innerHTML = ""; // Clear previous text
+            charIndex = 0;
+            
+            let interval = setInterval(() => {
+                if (charIndex < line.length) {
+                    element.innerHTML += line[charIndex];
+                    charIndex++;
+                } else {
+                    clearInterval(interval);
+                    isTyping = false;
+                    if (callback) callback();
+                }
+            }, speed);
+        }
+
+        function nextLine() {
+            if (isTyping) return;
+
+            if (lineIndex < textLines.length) {
+                typeText(textLines[lineIndex], () => {
+                    lineIndex++;
+                    if (lineIndex === textLines.length) {
+                        finishedIntro = true;
+                        // After finishing the last line, show choices or redirect
+                        setTimeout(() => {
+                            window.location.href = "cave3/cave3story.html";
+                        }, 1000);
+                    }
+                });
+            }
+        }
+
+        // Start typing the first line
+        nextLine();
+
+        // Listen for Enter key to show the next line
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                nextLine();
+            }
+        });
+    </script>
+</body>
+</html>

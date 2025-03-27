@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Page</title>
+    <link href="styling.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        
+
+        .start-container {
+            text-align: center;
+            margin-top: 5px;
+            height: 200px;
+            width: 550px;
+            background: rgba(58, 58, 58, 0.6);
+            
+        }
+
+        .title {
+            font-size: 50px;
+          
+            font-weight: 700;
+            
+        }
+
+        .start-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: rgb(72, 48, 80);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .start-button:hover {
+            background-color: rgb(60, 60, 58);
+        }
+
+       
+
+        
+
+    </style>
+</head>
+<body>
+
+    <div class="settings-icon" onclick="toggleSettings()">⚙️</div>
+
+    <div class="start-container">
+        <div class="title">Welcome to NightQuest</div>
+        <button class="start-button" onclick="location.href='Characters.html'">Start</button>
+    </div>
+
+    <!-- SETTINGS MENU -->
+    <div class="settings-menu" id="settingsMenu">
+        <label for="brightnessControl">Brightness</label>
+        <input type="range" id="brightnessControl" min="0" max="100" value="100" oninput="adjustBrightness()">
+        
+        <label for="volumeControl">Volume</label>
+        <input type="range" id="volumeControl" min="0" max="100" value="50" oninput="adjustVolume()">
+        
+        <button onclick="readPage()">Read Page</button>
+        
+        <!-- Go Back Button -->
+        <button onclick="toggleSettings()">Close</button>
+    </div>
+
+    <script>
+        // Toggle settings menu visibility
+        function toggleSettings() {
+            let menu = document.getElementById("settingsMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        // Adjust page brightness
+        function adjustBrightness() {
+            let brightness = document.getElementById("brightnessControl").value / 100;
+            document.body.style.filter = `brightness(${brightness})`;
+        }
+
+        // Adjust volume
+        function adjustVolume() {
+            let volume = document.getElementById("volumeControl").value / 100;
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                readPage();
+            }
+        }
+
+        // Read the page content aloud
+        function readPage() {
+            let text = document.body.innerText;
+            let speech = new SpeechSynthesisUtterance(text);
+            speech.rate = 1;
+            speech.volume = document.getElementById("volumeControl").value / 100;
+            speechSynthesis.speak(speech);
+        }
+    </script>
+
+</body>
+</html>
