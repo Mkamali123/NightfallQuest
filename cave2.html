@@ -173,10 +173,10 @@
             <img src="images/aqua-blade.png" alt="Blazebane">
         </div>
         <div class="inventory disabled" id="item3" data-tooltip="3.Revitalizing Bandage" onclick="disableItem('item3')">
-            <img src="../images/inventory/bandage.png" alt="Revitalizing Bandage">
+            <img src="bandage.png" alt="Revitalizing Bandage">
         </div>
         <div class="inventory disabled" id="item4" data-tooltip="4.Flameburst Potion" onclick="disableItem('item4')">
-            <img src="../images/inventory/blaze.png" alt="Flameburst Potion">
+            <img src="blaze.png" alt="Flameburst Potion">
         </div>
     </div>
 
@@ -192,7 +192,7 @@
         </div>
     </div>
     
-<img id="ab" src="../images/monsters/ab.png" alt="ab" style="
+<img id="ab" src="ab.png" alt="ab" style="
 display: none;
 position: absolute;
 top: 64%;
@@ -213,11 +213,11 @@ height: auto;
 z-index: 500;
 ">
 <audio id="defeatSound">
-    <source src="../sounds/Looser.mp3" type="audio/mpeg">
+    <source src="Looser.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="victorySound">
-    <source src="../sounds/youwon.mp3" type="audio/mpeg">
+    <source src="youwon.mp3" type="audio/mpeg">
 </audio>
 
 
@@ -420,14 +420,14 @@ window.onload = function () {
 
     
     if (selectedCharacter === "detective") {
-        playerImg.src = "../images/characters/wizard.png"; // Or use the sticker version if you downloaded it
+        playerImg.src = "wizard.png"; // Or use the sticker version if you downloaded it
     } else if (selectedCharacter === "shadow") {
-        playerImg.src = "../images/characters/warrior.png";
+        playerImg.src = "warrior.png";
     }
 
     // Optional fallback image if nothing selected
     if (!selectedCharacter) {
-        playerImg.src = "../images/characters/warrior.png";
+        playerImg.src = "warrior.png";
     }
 };
 function showRetryModal() {
@@ -482,7 +482,7 @@ function nextLevelModal() {
 
     // Add event listener to "GO" button
     document.getElementById("goButton").onclick = function () {
-        window.location.href = "../story3.html"; // Change to your next level page
+        window.location.href = "story3.html"; // Change to your next level page
     };
 }
 
